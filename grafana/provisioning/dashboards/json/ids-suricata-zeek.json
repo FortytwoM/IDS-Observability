@@ -55,7 +55,7 @@
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" [$__range]))",
+          "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` [$__range]))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -107,7 +107,7 @@
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} [$__range]))",
+          "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` [$__range]))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -157,7 +157,7 @@
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" [1m]))",
+          "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` [1m]))",
           "legendFormat": "алерты/мин",
           "refId": "A"
         }
@@ -178,7 +178,7 @@
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} [1m]))",
+          "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` [1m]))",
           "legendFormat": "алерты/мин",
           "refId": "A"
         }
@@ -252,7 +252,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip != \"\" | line_format \"{{.severity}} {{.signature_id}} {{.alert_title}} {{.src_ip}} -> {{.dest_ip}} cid={{.community_id}}\"",
+          "expr": "{job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` | line_format \"{{.severity}} {{.signature_id}} {{.alert_title}} {{.src_ip}}:{{.src_port}} -> {{.dest_ip}}:{{.dest_port}} cid={{.community_id}}\"",
           "refId": "A"
         }
       ],
@@ -273,7 +273,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | line_format \"{{.note}} {{.alert_title}} {{.src_ip}} -> {{.dest_ip}} cid={{.community_id}}\"",
+          "expr": "{job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` | line_format \"{{.note}} {{.alert_title}} {{.src_ip}}:{{.src_port}} -> {{.dest_ip}}:{{.dest_port}} cid={{.community_id}}\"",
           "refId": "A"
         }
       ],
@@ -298,7 +298,7 @@
       },
       "targets": [
         {
-          "expr": "topk(10, sum by (alert_title) (count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" [$__range])))",
+          "expr": "topk(10, sum by (alert_title) (count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` [$__range])))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -318,7 +318,7 @@
       "options": { "cellHeight": "sm", "showHeader": true },
       "targets": [
         {
-          "expr": "topk(10, sum by (note) (count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json [$__range])))",
+          "expr": "topk(10, sum by (note) (count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` [$__range])))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -351,7 +351,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"ids\", log_type=~\"alert|notice\"} | json | community_id = \"$community_id\" | line_format \"{{.vendor}} {{.log_type}} {{.alert_title}} {{.src_ip}} -> {{.dest_ip}}\"",
+          "expr": "{job=\"ids\", log_type=~\"alert|notice\"} | json | community_id = \"$community_id\" | src_ip =~ `$src` | dest_ip =~ `$dest` | signature_id =~ `$sid` | alert_title =~ `$alert` | src_port =~ `$port` or dest_port =~ `$port` | line_format \"{{.vendor}} {{.signature_id}} {{.alert_title}} {{.src_ip}}:{{.src_port}} -> {{.dest_ip}}:{{.dest_port}}\"",
           "refId": "A"
         }
       ],
@@ -364,6 +364,56 @@
   "tags": ["ids", "suricata", "zeek"],
   "templating": {
     "list": [
+      {
+        "current": { "selected": true, "text": ".*", "value": ".*" },
+        "hide": 0,
+        "label": "источник",
+        "name": "src",
+        "options": [{ "selected": true, "text": ".*", "value": ".*" }],
+        "query": ".*",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": { "selected": true, "text": ".*", "value": ".*" },
+        "hide": 0,
+        "label": "цель",
+        "name": "dest",
+        "options": [{ "selected": true, "text": ".*", "value": ".*" }],
+        "query": ".*",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": { "selected": true, "text": ".*", "value": ".*" },
+        "hide": 0,
+        "label": "порт",
+        "name": "port",
+        "options": [{ "selected": true, "text": ".*", "value": ".*" }],
+        "query": ".*",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": { "selected": true, "text": ".*", "value": ".*" },
+        "hide": 0,
+        "label": "id правила",
+        "name": "sid",
+        "options": [{ "selected": true, "text": ".*", "value": ".*" }],
+        "query": ".*",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": { "selected": true, "text": ".*", "value": ".*" },
+        "hide": 0,
+        "label": "текст алерта",
+        "name": "alert",
+        "options": [{ "selected": true, "text": ".*", "value": ".*" }],
+        "query": ".*",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
       {
         "current": { "selected": false, "text": "", "value": "" },
         "hide": 0,
@@ -381,5 +431,5 @@
   "timezone": "browser",
   "title": "IDS: Suricata и Zeek",
   "uid": "ids-compare",
-  "version": 22
+  "version": 23
 }
