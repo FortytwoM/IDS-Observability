@@ -1,0 +1,189 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: IDS
+    folder: IDS Alerts
+    interval: 1m
+    rules:
+      - uid: ids-suricata-spike
+        title: Suricata — всплеск алертов
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: sum(count_over_time({job="ids", vendor="suricata", log_type="alert"} [5m]))
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [20]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              expression: A
+              refId: B
+              type: threshold
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
+              refId: C
+              type: threshold
+        for: 2m
+        noDataState: OK
+        execErrState: Error
+        annotations:
+          summary: "Suricata: >20 алертов за 5 минут"
+          description: "Проверьте дашборд IDS и сигнатуру в eve.json"
+        labels:
+          severity: warning
+          source: suricata
+
+      - uid: ids-zeek-notice-spike
+        title: Zeek — всплеск notices
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: sum(count_over_time({job="ids", vendor="zeek", log_type="notice"} [5m]))
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [10]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              expression: A
+              refId: B
+              type: threshold
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
+              refId: C
+              type: threshold
+        for: 2m
+        noDataState: OK
+        execErrState: Error
+        annotations:
+          summary: "Zeek: >10 notices за 5 минут"
+        labels:
+          severity: warning
+          source: zeek
+
+      - uid: ids-suricata-drops
+        title: Suricata — kernel drops
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: max(max_over_time({job="ids", vendor="suricata", log_type="stats"} | json | unwrap kernel_drops [5m]))
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              expression: A
+              refId: B
+              type: threshold
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
+              refId: C
+              type: threshold
+        for: 5m
+        noDataState: OK
+        execErrState: Error
+        annotations:
+          summary: "Suricata теряет пакеты (kernel_drops > 0)"
+          description: "Span-трафик не успевает обрабатываться — проверьте CPU, AF_PACKET и размер буфера"
+        labels:
+          severity: critical
+          source: suricata
+
+      - uid: ids-zeek-capture-loss
+        title: Zeek — capture loss
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: max(max_over_time({job="ids", vendor="zeek", log_type="capture_loss"} | json | unwrap gaps [5m]))
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              expression: A
+              refId: B
+              type: threshold
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
+              refId: C
+              type: threshold
+        for: 5m
+        noDataState: OK
+        execErrState: Error
+        annotations:
+          summary: "Zeek фиксирует потери захвата (gaps > 0)"
+        labels:
+          severity: critical
+          source: zeek

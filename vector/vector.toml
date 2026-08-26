@@ -1,0 +1,244 @@
+# Vector: сбор логов Suricata и Zeek → Loki
+# Пути задаются через env в docker-compose (SURICATA_LOG_DIR, ZEEK_LOG_DIR)
+
+data_dir = "/var/lib/vector"
+
+# ── Suricata eve.json ────────────────────────────────────────────────────────
+
+[sources.suricata_eve]
+type = "file"
+include = ["/logs/suricata/eve.json"]
+read_from = "end"
+ignore_older_secs = 86400
+max_line_bytes = 1048576
+
+[transforms.suricata_drop_header]
+type = "filter"
+inputs = ["suricata_eve"]
+condition = '!starts_with(string!(.message), "#")'
+
+[transforms.suricata_parse]
+type = "remap"
+inputs = ["suricata_drop_header"]
+source = '''
+parsed, err = parse_json(string!(.message))
+if err != null {
+  abort
+}
+. = parsed
+.vendor = "suricata"
+.log_type = to_string(.event_type) ?? "unknown"
+'''
+
+[transforms.suricata_alerts]
+type = "filter"
+inputs = ["suricata_parse"]
+condition = '.event_type == "alert"'
+
+[transforms.suricata_alerts_norm]
+type = "remap"
+inputs = ["suricata_alerts"]
+source = '''
+alert = object(.alert) ?? {}
+.vendor = "suricata"
+.log_type = "alert"
+.alert_title = to_string(alert.signature) ?? ""
+.signature_id = to_string(alert.signature_id) ?? ""
+.severity = to_int(alert.severity) ?? 0
+.category = to_string(alert.category) ?? ""
+.src_ip = to_string(.src_ip) ?? ""
+.dest_ip = to_string(.dest_ip) ?? ""
+.community_id = to_string(.community_id) ?? ""
+.proto = to_string(.proto) ?? ""
+.ts = .timestamp
+.message = .alert_title
+'''
+
+[transforms.suricata_stats]
+type = "filter"
+inputs = ["suricata_parse"]
+condition = '.event_type == "stats"'
+
+[transforms.suricata_stats_norm]
+type = "remap"
+inputs = ["suricata_stats"]
+source = '''
+stats = object(.stats) ?? {}
+capture = object(stats.capture) ?? {}
+.vendor = "suricata"
+.log_type = "stats"
+.kernel_drops = to_int(capture.kernel_drops) ?? 0
+.decoder_pkts = to_int(capture.decoder_pkts) ?? 0
+.capture_pkts = to_int(capture.capture_pkts) ?? 0
+.ts = .timestamp
+.message = "suricata stats"
+'''
+
+# ── Zeek JSON logs ───────────────────────────────────────────────────────────
+
+[sources.zeek_notice]
+type = "file"
+include = ["/logs/zeek/notice.log"]
+read_from = "end"
+ignore_older_secs = 86400
+
+[sources.zeek_intel]
+type = "file"
+include = ["/logs/zeek/intel.log"]
+read_from = "end"
+ignore_older_secs = 86400
+
+[sources.zeek_capture_loss]
+type = "file"
+include = ["/logs/zeek/capture_loss.log"]
+read_from = "end"
+ignore_older_secs = 86400
+
+[sources.zeek_stats]
+type = "file"
+include = ["/logs/zeek/stats.log"]
+read_from = "end"
+ignore_older_secs = 86400
+
+[transforms.zeek_merge]
+type = "remap"
+inputs = ["zeek_notice", "zeek_intel", "zeek_capture_loss", "zeek_stats"]
+source = '''
+file_path = string!(.file)
+if starts_with(string!(.message), "#") {
+  abort
+}
+parsed, err = parse_json(string!(.message))
+if err != null {
+  abort
+}
+. = parsed
+.file = file_path
+'''
+
+[transforms.zeek_notice_norm]
+type = "filter"
+inputs = ["zeek_merge"]
+condition = 'ends_with(string!(.file), "notice.log")'
+
+[transforms.zeek_notice_enrich]
+type = "remap"
+inputs = ["zeek_notice_norm"]
+source = '''
+.vendor = "zeek"
+.log_type = "notice"
+.alert_title = to_string(.msg) ?? to_string(.note) ?? ""
+.note = to_string(.note) ?? ""
+.src_ip = to_string(get(., ["id.orig_h"]) ?? .src) ?? ""
+.dest_ip = to_string(get(., ["id.resp_h"]) ?? .dst) ?? ""
+.community_id = to_string(.community_id) ?? ""
+.proto = to_string(.proto) ?? ""
+.severity = 0
+.ts = .ts
+.message = .alert_title
+'''
+
+[transforms.zeek_intel_norm]
+type = "filter"
+inputs = ["zeek_merge"]
+condition = 'ends_with(string!(.file), "intel.log")'
+
+[transforms.zeek_intel_enrich]
+type = "remap"
+inputs = ["zeek_intel_norm"]
+source = '''
+.vendor = "zeek"
+.log_type = "intel"
+.alert_title = to_string(.indicator) ?? "intel hit"
+.note = "Intel::MATCH"
+.src_ip = ""
+.dest_ip = ""
+.community_id = to_string(.community_id) ?? ""
+.ts = .ts
+.message = .alert_title
+'''
+
+[transforms.zeek_capture_loss_norm]
+type = "filter"
+inputs = ["zeek_merge"]
+condition = 'ends_with(string!(.file), "capture_loss.log")'
+
+[transforms.zeek_capture_loss_enrich]
+type = "remap"
+inputs = ["zeek_capture_loss_norm"]
+source = '''
+.vendor = "zeek"
+.log_type = "capture_loss"
+.gaps = to_float(.gaps) ?? 0.0
+.ts = .ts
+.message = "zeek capture loss"
+'''
+
+[transforms.zeek_stats_norm]
+type = "filter"
+inputs = ["zeek_merge"]
+condition = 'ends_with(string!(.file), "stats.log")'
+
+[transforms.zeek_stats_enrich]
+type = "remap"
+inputs = ["zeek_stats_norm"]
+source = '''
+.vendor = "zeek"
+.log_type = "stats"
+.pkts_proc = to_int(.pkts_proc) ?? 0
+.bytes_recv = to_int(.bytes_recv) ?? 0
+.ts = .ts
+.message = "zeek stats"
+'''
+
+# ── Объединённые потоки ──────────────────────────────────────────────────────
+
+[transforms.all_alerts]
+type = "remap"
+inputs = ["suricata_alerts_norm", "zeek_notice_enrich", "zeek_intel_enrich"]
+source = '''
+if !exists(.ts) {
+  .ts = now()
+}
+'''
+
+[transforms.all_health]
+type = "remap"
+inputs = ["suricata_stats_norm", "zeek_capture_loss_enrich", "zeek_stats_enrich"]
+source = '''
+if !exists(.ts) {
+  .ts = now()
+}
+'''
+
+# ── Loki ─────────────────────────────────────────────────────────────────────
+
+[sinks.loki_alerts]
+type = "loki"
+inputs = ["all_alerts"]
+endpoint = "http://loki:3100"
+encoding.codec = "json"
+out_of_order_action = "accept"
+
+[sinks.loki_alerts.labels]
+job = "ids"
+vendor = "{{ vendor }}"
+log_type = "{{ log_type }}"
+
+[sinks.loki_health]
+type = "loki"
+inputs = ["all_health"]
+endpoint = "http://loki:3100"
+encoding.codec = "json"
+out_of_order_action = "accept"
+
+[sinks.loki_health.labels]
+job = "ids"
+vendor = "{{ vendor }}"
+log_type = "{{ log_type }}"
+
+# Отладка (раскомментируйте при настройке)
+# [sinks.console]
+# type = "console"
+# inputs = ["all_alerts"]
+# encoding.codec = "json"

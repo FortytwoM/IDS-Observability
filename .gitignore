@@ -1,0 +1,7 @@
+.env
+grafana/data/
+loki/data/
+vector/data/
+certs/*.crt
+certs/*.key
+!certs/.gitkeep
