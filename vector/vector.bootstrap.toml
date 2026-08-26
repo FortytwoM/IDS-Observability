@@ -78,27 +78,31 @@ capture = object(stats.capture) ?? {}
 
 [sources.zeek_notice]
 type = "file"
-include = ["/logs/zeek/notice.log"]
+include = ["/logs/zeek-root/${ZEEK_LOG_SUBDIR:-current}/notice.log"]
 read_from = "beginning"
 ignore_older_secs = 86400
+glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_intel]
 type = "file"
-include = ["/logs/zeek/intel.log"]
+include = ["/logs/zeek-root/${ZEEK_LOG_SUBDIR:-current}/intel.log"]
 read_from = "beginning"
 ignore_older_secs = 86400
+glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_capture_loss]
 type = "file"
-include = ["/logs/zeek/capture_loss.log"]
+include = ["/logs/zeek-root/${ZEEK_LOG_SUBDIR:-current}/capture_loss.log"]
 read_from = "beginning"
 ignore_older_secs = 86400
+glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_stats]
 type = "file"
-include = ["/logs/zeek/stats.log"]
+include = ["/logs/zeek-root/${ZEEK_LOG_SUBDIR:-current}/stats.log"]
 read_from = "beginning"
 ignore_older_secs = 86400
+glob_minimum_cooldown_ms = 1000
 
 [transforms.zeek_merge]
 type = "remap"
