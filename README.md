@@ -101,12 +101,15 @@ ls -la /opt/zeek/logs/current/
 
 cp .env.example .env
 # отредактируйте SURICATA_LOG_DIR, ZEEK_LOG_DIR, GRAFANA_ADMIN_PASSWORD
-# для доступа по DNS/IP укажите GRAFANA_ROOT_URL и GRAFANA_CERT_SAN
+# для доступа из сети укажите IP/DNS сенсора:
+#   GRAFANA_ROOT_URL=https://10.0.0.50:3000
+#   GRAFANA_CERT_SAN=DNS:ids-sensor,IP:10.0.0.50,DNS:localhost,IP:127.0.0.1
 
 docker compose up -d
 ```
 
-Grafana: **https://127.0.0.1:3000** (браузер предупредит о self-signed cert — это нормально для сенсора).
+Grafana слушает **все интерфейсы** (`0.0.0.0:3000`): **https://\<IP-сенсора\>:3000**.  
+Браузер предупредит о self-signed cert — это нормально; для корректного имени в сертификате задайте `GRAFANA_CERT_SAN` и пересоздайте `certs/grafana.*`.
 
 Дашборд: **IDS → IDS: Zeek vs Suricata**
 
@@ -114,10 +117,13 @@ Grafana: **https://127.0.0.1:3000** (браузер предупредит о se
 
 | Переменная | Назначение |
 |------------|------------|
-| `GRAFANA_ROOT_URL` | URL, по которому открываете UI (должен быть `https://…`) |
+| `GRAFANA_BIND` / `GRAFANA_PORT` | на чём слушать (по умолчанию `0.0.0.0:3000`) |
+| `GRAFANA_ROOT_URL` | URL UI, напр. `https://10.0.0.50:3000` |
 | `GRAFANA_CERT_CN` | CN сертификата |
-| `GRAFANA_CERT_SAN` | SAN, напр. `DNS:sensor.local,IP:10.0.0.5` |
+| `GRAFANA_CERT_SAN` | SAN: `DNS:…,IP:…` (нужен IP/DNS сенсора) |
 | `GRAFANA_TLS_DAYS` | срок self-signed cert |
+
+Loki остаётся только на `127.0.0.1:3100` — наружу не открыт.
 
 **Свой сертификат** (Let's Encrypt / внутренний CA):
 
@@ -160,7 +166,7 @@ docker compose up -d
 SURICATA_LOG_DIR=C:/Users/admin/Documents/PR/IDS/logs/pcap/suricata
 ZEEK_LOG_DIR=C:/Users/admin/Documents/PR/IDS/logs/pcap/zeek
 VECTOR_CONFIG=vector.bootstrap.toml
-GRAFANA_ROOT_URL=https://127.0.0.1:3000
+GRAFANA_ROOT_URL=https://localhost:3000
 ```
 
 ---

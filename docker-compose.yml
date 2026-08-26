@@ -81,7 +81,7 @@ services:
       GF_SERVER_PROTOCOL: https
       GF_SERVER_CERT_FILE: /etc/grafana/certs/grafana.crt
       GF_SERVER_CERT_KEY: /etc/grafana/certs/grafana.key
-      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-https://127.0.0.1:3000}
+      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-https://localhost:3000}
       GF_SECURITY_COOKIE_SECURE: "true"
       GF_SECURITY_STRICT_TRANSPORT_SECURITY: "true"
       GF_SECURITY_STRICT_TRANSPORT_SECURITY_MAX_AGE_SECONDS: "86400"
@@ -94,7 +94,7 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./certs:/etc/grafana/certs:ro
     ports:
-      - "127.0.0.1:3000:3000"
+      - "${GRAFANA_BIND:-0.0.0.0}:${GRAFANA_PORT:-3000}:3000"
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- --no-check-certificate https://127.0.0.1:3000/api/health || exit 1"]
       interval: 10s
