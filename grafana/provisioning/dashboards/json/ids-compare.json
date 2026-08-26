@@ -19,18 +19,28 @@
   "links": [],
   "panels": [
     {
-      "collapsed": false,
-      "gridPos": { "h": 1, "w": 12, "x": 0, "y": 0 },
+      "gridPos": { "h": 2, "w": 12, "x": 0, "y": 0 },
       "id": 100,
-      "title": "Suricata",
-      "type": "row"
+      "options": {
+        "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
+        "content": "## Suricata\nАлерты и потери захвата (слева)",
+        "mode": "markdown"
+      },
+      "title": "",
+      "transparent": true,
+      "type": "text"
     },
     {
-      "collapsed": false,
-      "gridPos": { "h": 1, "w": 12, "x": 12, "y": 0 },
+      "gridPos": { "h": 2, "w": 12, "x": 12, "y": 0 },
       "id": 110,
-      "title": "Zeek",
-      "type": "row"
+      "options": {
+        "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
+        "content": "## Zeek\nNotices и потери захвата (справа)",
+        "mode": "markdown"
+      },
+      "title": "",
+      "transparent": true,
+      "type": "text"
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
@@ -40,7 +50,7 @@
           "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 2 },
       "id": 1,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
       "targets": [
@@ -50,7 +60,7 @@
           "refId": "A"
         }
       ],
-      "title": "Alerts (за окно)",
+      "title": "Suricata — alerts",
       "type": "stat"
     },
     {
@@ -70,7 +80,7 @@
           "unit": "short"
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 2 },
       "id": 3,
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } },
       "targets": [
@@ -80,7 +90,7 @@
           "refId": "A"
         }
       ],
-      "title": "Drops (за окно)",
+      "title": "Suricata — drops",
       "type": "stat"
     },
     {
@@ -91,7 +101,7 @@
           "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] }
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 2 },
       "id": 2,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
       "targets": [
@@ -101,7 +111,7 @@
           "refId": "A"
         }
       ],
-      "title": "Notices (за окно)",
+      "title": "Zeek — notices",
       "type": "stat"
     },
     {
@@ -120,7 +130,7 @@
           }
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 2 },
       "id": 4,
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } },
       "targets": [
@@ -130,7 +140,7 @@
           "refId": "A"
         }
       ],
-      "title": "Capture gaps",
+      "title": "Zeek — capture gaps",
       "type": "stat"
     },
     {
@@ -141,7 +151,7 @@
           "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 2, "showPoints": "never", "stacking": { "mode": "none" } }
         }
       },
-      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 5 },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 6 },
       "id": 10,
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
@@ -162,7 +172,7 @@
           "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 2, "showPoints": "never", "stacking": { "mode": "none" } }
         }
       },
-      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 5 },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 6 },
       "id": 12,
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
@@ -184,7 +194,7 @@
           "unit": "ops"
         }
       },
-      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 12 },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 13 },
       "id": 11,
       "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
       "targets": [
@@ -205,7 +215,7 @@
           "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "showPoints": "never" }
         }
       },
-      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 12 },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 13 },
       "id": 13,
       "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
       "targets": [
@@ -220,21 +230,14 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 12, "x": 0, "y": 19 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 20 },
       "id": 101,
-      "title": "Suricata — алерты",
-      "type": "row"
-    },
-    {
-      "collapsed": false,
-      "gridPos": { "h": 1, "w": 12, "x": 12, "y": 19 },
-      "id": 111,
-      "title": "Zeek — notices",
+      "title": "Последние события",
       "type": "row"
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 20 },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 21 },
       "id": 20,
       "options": {
         "dedupStrategy": "none",
@@ -252,12 +255,12 @@
           "refId": "A"
         }
       ],
-      "title": "Последние алерты",
+      "title": "Suricata — последние алерты",
       "type": "logs"
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 20 },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 21 },
       "id": 21,
       "options": {
         "dedupStrategy": "none",
@@ -273,7 +276,7 @@
           "refId": "A"
         }
       ],
-      "title": "Последние notices",
+      "title": "Zeek — последние notices",
       "type": "logs"
     },
     {
@@ -284,7 +287,7 @@
           "mappings": []
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 31 },
       "id": 30,
       "options": {
         "cellHeight": "sm",
@@ -299,7 +302,7 @@
           "refId": "A"
         }
       ],
-      "title": "Top signatures",
+      "title": "Suricata — top signatures",
       "transformations": [
         { "id": "labelsToFields", "options": { "mode": "columns" } },
         { "id": "organize", "options": { "renameByName": { "Value": "count", "alert_title": "signature" } } }
@@ -309,7 +312,7 @@
     {
       "datasource": { "type": "loki", "uid": "loki" },
       "fieldConfig": { "defaults": { "custom": { "align": "auto" } } },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 31 },
       "id": 31,
       "options": { "cellHeight": "sm", "showHeader": true },
       "targets": [
@@ -319,7 +322,7 @@
           "refId": "A"
         }
       ],
-      "title": "Top notice types",
+      "title": "Zeek — top notice types",
       "transformations": [
         { "id": "labelsToFields", "options": { "mode": "columns" } },
         { "id": "organize", "options": { "renameByName": { "Value": "count", "note": "notice" } } }
@@ -328,14 +331,14 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 38 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 39 },
       "id": 102,
-      "title": "Корреляция (оба движка, community_id)",
+      "title": "Корреляция (community_id)",
       "type": "row"
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 39 },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 40 },
       "id": 40,
       "options": {
         "dedupStrategy": "none",
@@ -347,11 +350,11 @@
       },
       "targets": [
         {
-          "expr": "{job=\"ids\", log_type=~\"alert|notice|intel\"} | json | community_id = \"$community_id\" | line_format \"{{.vendor}} {{.log_type}} {{.alert_title}} {{.src_ip}} -> {{.dest_ip}}\"",
+          "expr": "{job=\"ids\", log_type=~\"alert|notice\"} | json | community_id = \"$community_id\" | line_format \"{{.vendor}} {{.log_type}} {{.alert_title}} {{.src_ip}} -> {{.dest_ip}}\"",
           "refId": "A"
         }
       ],
-      "title": "События по community_id",
+      "title": "События по community_id (оба движка)",
       "type": "logs"
     }
   ],
@@ -377,5 +380,5 @@
   "timezone": "browser",
   "title": "IDS: Zeek vs Suricata",
   "uid": "ids-compare",
-  "version": 5
+  "version": 6
 }
