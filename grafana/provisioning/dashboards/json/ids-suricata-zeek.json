@@ -1,4 +1,4 @@
-﻿{
+{
   "annotations": {
     "list": [
       {
@@ -19,11 +19,11 @@
   "links": [],
   "panels": [
     {
-      "gridPos": { "h": 3, "w": 12, "x": 0, "y": 0 },
+      "gridPos": { "h": 2, "w": 12, "x": 0, "y": 0 },
       "id": 100,
       "options": {
         "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
-        "content": "# Suricata\nалерты и потери",
+        "content": "# Suricata",
         "mode": "markdown"
       },
       "title": "",
@@ -31,11 +31,11 @@
       "type": "text"
     },
     {
-      "gridPos": { "h": 3, "w": 12, "x": 12, "y": 0 },
+      "gridPos": { "h": 2, "w": 12, "x": 12, "y": 0 },
       "id": 110,
       "options": {
         "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
-        "content": "# Zeek\nалерты и потери",
+        "content": "# Zeek",
         "mode": "markdown"
       },
       "title": "",
@@ -50,7 +50,7 @@
           "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 3 },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
       "id": 1,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
       "targets": [
@@ -80,7 +80,7 @@
           "unit": "short"
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 3 },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
       "id": 3,
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } },
       "targets": [
@@ -102,7 +102,7 @@
           "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] }
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 3 },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
       "id": 2,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
       "targets": [
@@ -131,7 +131,7 @@
           }
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 3 },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
       "id": 4,
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } },
       "targets": [
@@ -152,7 +152,7 @@
           "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 2, "showPoints": "never", "stacking": { "mode": "none" } }
         }
       },
-      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 7 },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 5 },
       "id": 10,
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
@@ -173,7 +173,7 @@
           "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 2, "showPoints": "never", "stacking": { "mode": "none" } }
         }
       },
-      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 7 },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 5 },
       "id": 12,
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
@@ -195,7 +195,7 @@
           "unit": "ops"
         }
       },
-      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 14 },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 12 },
       "id": 11,
       "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
       "targets": [
@@ -216,7 +216,7 @@
           "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "showPoints": "never" }
         }
       },
-      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 14 },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 12 },
       "id": 13,
       "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
       "targets": [
@@ -231,14 +231,14 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 21 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 19 },
       "id": 101,
       "title": "Последние алерты",
       "type": "row"
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 22 },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 20 },
       "id": 20,
       "options": {
         "dedupStrategy": "none",
@@ -261,7 +261,7 @@
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 22 },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 20 },
       "id": 21,
       "options": {
         "dedupStrategy": "none",
@@ -288,7 +288,7 @@
           "mappings": []
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
       "id": 30,
       "options": {
         "cellHeight": "sm",
@@ -313,7 +313,7 @@
     {
       "datasource": { "type": "loki", "uid": "loki" },
       "fieldConfig": { "defaults": { "custom": { "align": "auto" } } },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
       "id": 31,
       "options": { "cellHeight": "sm", "showHeader": true },
       "targets": [
@@ -332,14 +332,14 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 40 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 38 },
       "id": 102,
       "title": "Корреляция (community_id)",
       "type": "row"
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 41 },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 39 },
       "id": 40,
       "options": {
         "dedupStrategy": "none",
@@ -381,5 +381,5 @@
   "timezone": "browser",
   "title": "IDS: Suricata и Zeek",
   "uid": "ids-compare",
-  "version": 11
+  "version": 21
 }

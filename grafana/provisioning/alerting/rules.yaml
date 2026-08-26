@@ -3,11 +3,11 @@ apiVersion: 1
 groups:
   - orgId: 1
     name: IDS
-    folder: IDS Alerts
+    folder: IDS
     interval: 1m
     rules:
       - uid: ids-suricata-spike
-        title: Suricata — всплеск алертов
+        title: Suricata - всплеск алертов
         condition: C
         data:
           - refId: A
@@ -53,7 +53,7 @@ groups:
           source: suricata
 
       - uid: ids-zeek-notice-spike
-        title: Zeek — всплеск notices
+        title: Zeek - всплеск notices
         condition: C
         data:
           - refId: A
@@ -98,7 +98,7 @@ groups:
           source: zeek
 
       - uid: ids-suricata-drops
-        title: Suricata — kernel drops
+        title: Suricata - kernel drops
         condition: C
         data:
           - refId: A
@@ -144,7 +144,7 @@ groups:
           source: suricata
 
       - uid: ids-zeek-capture-loss
-        title: Zeek — capture loss
+        title: Zeek - capture loss
         condition: C
         data:
           - refId: A

@@ -1,9 +1,13 @@
 apiVersion: 1
 
 providers:
+  # Stable provider name + folderUid: Grafana updates by dashboard uid from JSON.
+  # Renaming the JSON file (with disableDeletion: false) drops the old provisioning
+  # path and reloads — community workaround when a stale DB copy sticks.
   - name: IDS
     orgId: 1
     folder: IDS
+    folderUid: ids
     type: file
     disableDeletion: false
     updateIntervalSeconds: 10

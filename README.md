@@ -71,8 +71,8 @@ Retention по умолчанию — 7 дней (`LOKI_RETENTION=168h`). Loki �
 ### 4. Grafana — визуализация и алерты
 
 - **HTTPS обязателен**: при `docker compose up` сервис `cert-init` создаёт self-signed сертификат в `certs/` (или использует ваш `grafana.crt` / `grafana.key`).
-- **Дашборд** `IDS: Zeek vs Suricata` — счётчики, графики сравнения, таблицы алертов, корреляция по `community_id`.
-- **Alert rules** (`grafana/provisioning/alerting/rules.yaml`) — всплески алертов, kernel drops, capture loss. Contact point (Slack/email) настраивается в UI.
+- **Дашборд** `IDS: Suricata и Zeek` — счётчики, графики сравнения, таблицы алертов, корреляция по `community_id`.
+- **Alert rules** (`grafana/provisioning/alerting/rules.yaml`, папка **IDS**) — всплески алертов, kernel drops, capture loss. Contact point (Slack/email) настраивается в UI.
 
 ### 5. Сравнение Zeek vs Suricata
 
@@ -112,7 +112,19 @@ docker compose up -d
 Grafana слушает **все интерфейсы** (`0.0.0.0:3000`): **https://\<IP-сенсора\>:3000**.  
 Браузер предупредит о self-signed cert — это нормально; для корректного имени в сертификате задайте `GRAFANA_CERT_SAN` и пересоздайте `certs/grafana.*`.
 
-Дашборд: **IDS → IDS: Zeek vs Suricata**
+Дашборд: **IDS → IDS: Suricata и Zeek**
+
+Если в UI остаётся старый provisioned-дашборд (нельзя удалить, подписи не меняются) — сбросьте БД Grafana:
+
+```bash
+bash scripts/reset-grafana.sh
+# или вручную:
+# docker compose stop grafana && docker compose rm -f grafana
+# docker volume rm ids-observability_grafana-data
+# docker compose up -d grafana
+```
+
+Grafana обновляет дашборд по `uid` из JSON; переименование файла при `disableDeletion: false` снимает старую запись provisioning.
 
 ### HTTPS
 
