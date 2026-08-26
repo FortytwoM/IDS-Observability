@@ -16,7 +16,7 @@ groups:
               to: 0
             datasourceUid: loki
             model:
-              expr: sum(count_over_time({job="ids", vendor="suricata", log_type="alert"} [5m]))
+              expr: sum(count_over_time({job="ids", vendor="suricata", log_type="alert"} | json | signature_id !~ "2210029|2210045" [5m]))
               refId: A
           - refId: B
             datasourceUid: __expr__

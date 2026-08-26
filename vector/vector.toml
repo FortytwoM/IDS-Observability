@@ -54,6 +54,13 @@ alert = object(.alert) ?? {}
 .message = .alert_title
 '''
 
+# STREAM invalid-ack: disable.conf often does not apply — Suricata still
+# loads packaged /etc/suricata/rules/stream-events.rules.
+[transforms.suricata_alerts_drop_noise]
+type = "filter"
+inputs = ["suricata_alerts_norm"]
+condition = '!includes(["2210029", "2210045"], to_string!(.signature_id))'
+
 [transforms.suricata_stats]
 type = "filter"
 inputs = ["suricata_parse"]
@@ -201,7 +208,7 @@ source = '''
 
 [transforms.all_alerts]
 type = "remap"
-inputs = ["suricata_alerts_norm", "zeek_notice_enrich", "zeek_intel_enrich"]
+inputs = ["suricata_alerts_drop_noise", "zeek_notice_enrich", "zeek_intel_enrich"]
 source = '''
 if !exists(.ts) {
   .ts = now()
