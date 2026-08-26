@@ -84,12 +84,12 @@
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } },
       "targets": [
         {
-          "expr": "max(increase({job=\"ids\", vendor=\"suricata\", log_type=\"stats\"} | json | unwrap kernel_drops [$__range]))",
+          "expr": "max(max_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"stats\"} | json | unwrap kernel_drops [$__range]) - min_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"stats\"} | json | unwrap kernel_drops [$__range]))",
           "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "Suricata drops",
+      "title": "Suricata drops (за окно)",
       "type": "stat"
     },
     {
@@ -329,5 +329,5 @@
   "timezone": "browser",
   "title": "IDS: Zeek vs Suricata",
   "uid": "ids-compare",
-  "version": 2
+  "version": 3
 }
