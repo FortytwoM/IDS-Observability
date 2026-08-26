@@ -380,6 +380,6 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "IDS: Suricata и Zeek",
-  "uid": "ids-suricata-zeek",
-  "version": 1
+  "uid": "ids-compare",
+  "version": 11
 }
