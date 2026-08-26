@@ -89,7 +89,7 @@
           "refId": "A"
         }
       ],
-      "title": "Suricata drops (за окно)",
+      "title": "Suricata drops",
       "type": "stat"
     },
     {
@@ -169,7 +169,7 @@
       "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
       "targets": [
         {
-          "expr": "max(rate({job=\"ids\", vendor=\"suricata\", log_type=\"stats\"} | json | unwrap kernel_drops [5m]))",
+          "expr": "max(rate_counter({job=\"ids\", vendor=\"suricata\", log_type=\"stats\"} | json | unwrap kernel_drops [5m]))",
           "legendFormat": "drops/s",
           "refId": "A"
         },
