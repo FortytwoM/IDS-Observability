@@ -107,7 +107,7 @@ groups:
               to: 0
             datasourceUid: loki
             model:
-              expr: max(max_over_time({job="ids", vendor="suricata", log_type="stats"} | json | unwrap kernel_drops [5m]))
+              expr: max(increase({job="ids", vendor="suricata", log_type="stats"} | json | unwrap kernel_drops [5m]))
               refId: A
           - refId: B
             datasourceUid: __expr__
@@ -137,8 +137,8 @@ groups:
         noDataState: OK
         execErrState: Error
         annotations:
-          summary: "Suricata теряет пакеты (kernel_drops > 0)"
-          description: "Span-трафик не успевает обрабатываться — проверьте CPU, AF_PACKET и размер буфера"
+          summary: "Suricata: новые kernel drops за 5 минут"
+          description: "Прирост drops > 0 — span не успевает обрабатываться (CPU, AF_PACKET, буфер)"
         labels:
           severity: critical
           source: suricata
