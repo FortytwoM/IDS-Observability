@@ -80,31 +80,32 @@ capture = object(stats.capture) ?? {}
 '''
 
 # ── Zeek JSON logs ───────────────────────────────────────────────────────────
+# Host: ${ZEEK_SPOOL_DIR:-/opt/zeek/spool} → /logs/zeek-spool
 
 [sources.zeek_notice]
 type = "file"
-include = ["/logs/zeek-live/notice.log"]
+include = ["/logs/zeek-spool/logger/notice.log"]
 read_from = "beginning"
 ignore_older_secs = 86400
 glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_intel]
 type = "file"
-include = ["/logs/zeek-live/intel.log"]
+include = ["/logs/zeek-spool/logger/intel.log"]
 read_from = "beginning"
 ignore_older_secs = 86400
 glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_capture_loss]
 type = "file"
-include = ["/logs/zeek-live/capture_loss.log"]
+include = ["/logs/zeek-spool/logger/capture_loss.log"]
 read_from = "beginning"
 ignore_older_secs = 86400
 glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_stats]
 type = "file"
-include = ["/logs/zeek-live/stats.log"]
+include = ["/logs/zeek-spool/logger/stats.log"]
 read_from = "beginning"
 ignore_older_secs = 86400
 glob_minimum_cooldown_ms = 1000

@@ -57,9 +57,11 @@ services:
       - ./vector/${VECTOR_CONFIG:-vector.toml}:/etc/vector/vector.toml:ro
       - vector-data:/var/lib/vector
       - ${SURICATA_LOG_DIR}:/logs/suricata:ro
-      # Zeekctl: logs/current → /opt/zeek/spool/logger (абсолютный symlink).
-      # Монтируем spool/logger напрямую — иначе внутри контейнера symlink битый.
-      - ${ZEEK_SPOOL_LOGGER:-/opt/zeek/spool/logger}:/logs/zeek-live:ro
+      # Zeekctl: live-логи в spool/logger; logs/current — symlink туда.
+      # Монтируем РОДИТЕЛЯ /opt/zeek/spool, не logger/: после zeekctl deploy
+      # каталог logger пересоздаётся (новый inode) и bind на него «пустеет»
+      # (Docker inode mount — https://stackoverflow.com/q/53547973).
+      - ${ZEEK_SPOOL_DIR:-/opt/zeek/spool}:/logs/zeek-spool:ro
     command: ["--config", "/etc/vector/vector.toml"]
     healthcheck:
       test: ["CMD", "vector", "validate", "/etc/vector/vector.toml"]

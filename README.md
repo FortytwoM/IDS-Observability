@@ -100,8 +100,8 @@ ls -la /var/log/suricata/eve.json
 ls -la /opt/zeek/logs/current/
 
 cp .env.example .env
-# отредактируйте SURICATA_LOG_DIR, ZEEK_SPOOL_LOGGER, GRAFANA_ADMIN_PASSWORD
-# ZEEK_SPOOL_LOGGER=/opt/zeek/spool/logger  (куда указывает logs/current)
+# отредактируйте SURICATA_LOG_DIR, ZEEK_SPOOL_DIR, GRAFANA_ADMIN_PASSWORD
+# ZEEK_SPOOL_DIR=/opt/zeek/spool  (родитель logger/; не монтируйте logger напрямую)
 # для доступа из сети укажите IP/DNS сенсора:
 #   GRAFANA_ROOT_URL=https://10.0.0.50:3000
 #   GRAFANA_CERT_SAN=DNS:ids-sensor,IP:10.0.0.50,DNS:localhost,IP:127.0.0.1
@@ -177,14 +177,23 @@ docker compose up -d
 
 ```env
 SURICATA_LOG_DIR=C:/Users/admin/Documents/PR/IDS/logs/pcap/suricata
-ZEEK_SPOOL_LOGGER=C:/Users/admin/Documents/PR/IDS/logs/pcap/zeek
+# родитель каталога logger/ (live *.log внутри .../logger/)
+ZEEK_SPOOL_DIR=C:/Users/admin/Documents/PR/IDS/logs/pcap
 VECTOR_CONFIG=vector.bootstrap.toml
 GRAFANA_ROOT_URL=https://localhost:3000
 ```
 
+Для lab, если логи лежат прямо в `.../zeek/`, сделайте `.../logger` → тот же каталог (junction/symlink) либо скопируйте структуру `spool/logger`.
+
 ---
 
-## Community ID (корреляция)
+## Zeek deploy и «пропавшие» логи в Vector
+
+Docker bind-mount привязан к **inode** каталога ([Stack Overflow](https://stackoverflow.com/questions/53547973/files-within-docker-bind-mount-directory-not-updating)).  
+`zeekctl deploy` пересоздаёт `spool/logger` → старый mount пустой.
+
+**Правильно:** монтировать родителя `/opt/zeek/spool` (`ZEEK_SPOOL_DIR`), Vector читает `/logs/zeek-spool/logger/*.log`.  
+Альтернативы из гайдов: после deploy делать `docker compose restart vector`; или не удалять каталог, а чистить файлы внутри (Zeek так не делает).
 
 **Suricata** (`suricata.yaml`):
 
