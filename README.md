@@ -100,8 +100,8 @@ ls -la /var/log/suricata/eve.json
 ls -la /opt/zeek/logs/current/
 
 cp .env.example .env
-# отредактируйте SURICATA_LOG_DIR, ZEEK_LOGS_ROOT, GRAFANA_ADMIN_PASSWORD
-# ZEEK_LOGS_ROOT=/opt/zeek/logs  (родитель, не .../current)
+# отредактируйте SURICATA_LOG_DIR, ZEEK_SPOOL_LOGGER, GRAFANA_ADMIN_PASSWORD
+# ZEEK_SPOOL_LOGGER=/opt/zeek/spool/logger  (куда указывает logs/current)
 # для доступа из сети укажите IP/DNS сенсора:
 #   GRAFANA_ROOT_URL=https://10.0.0.50:3000
 #   GRAFANA_CERT_SAN=DNS:ids-sensor,IP:10.0.0.50,DNS:localhost,IP:127.0.0.1
@@ -165,8 +165,7 @@ docker compose up -d
 
 ```env
 SURICATA_LOG_DIR=C:/Users/admin/Documents/PR/IDS/logs/pcap/suricata
-ZEEK_LOGS_ROOT=C:/Users/admin/Documents/PR/IDS/logs/pcap/zeek
-ZEEK_LOG_SUBDIR=.
+ZEEK_SPOOL_LOGGER=C:/Users/admin/Documents/PR/IDS/logs/pcap/zeek
 VECTOR_CONFIG=vector.bootstrap.toml
 GRAFANA_ROOT_URL=https://localhost:3000
 ```

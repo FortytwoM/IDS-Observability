@@ -53,14 +53,13 @@ services:
         condition: service_healthy
     environment:
       VECTOR_LOG: info
-      ZEEK_LOG_SUBDIR: ${ZEEK_LOG_SUBDIR:-current}
     volumes:
       - ./vector/${VECTOR_CONFIG:-vector.toml}:/etc/vector/vector.toml:ro
       - vector-data:/var/lib/vector
       - ${SURICATA_LOG_DIR}:/logs/suricata:ro
-      # Родительский каталог логов Zeek (не .../current): иначе после ротации
-      # symlink Docker остаётся на старом inode, Vector пишет reached_eof и молчит.
-      - ${ZEEK_LOGS_ROOT}:/logs/zeek-root:ro
+      # Zeekctl: logs/current → /opt/zeek/spool/logger (абсолютный symlink).
+      # Монтируем spool/logger напрямую — иначе внутри контейнера symlink битый.
+      - ${ZEEK_SPOOL_LOGGER:-/opt/zeek/spool/logger}:/logs/zeek-live:ro
     command: ["--config", "/etc/vector/vector.toml"]
     healthcheck:
       test: ["CMD", "vector", "validate", "/etc/vector/vector.toml"]

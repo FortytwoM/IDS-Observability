@@ -75,33 +75,33 @@ capture = object(stats.capture) ?? {}
 '''
 
 # ── Zeek JSON logs ───────────────────────────────────────────────────────────
-# Путь: /logs/zeek-root/<subdir>/…  subdir=current на Linux (symlink ротируется).
-# ZEEK_LOG_SUBDIR задаётся в compose (. для lab без current).
+# zeekctl пишет в spool/logger; logs/current — symlink туда.
+# В контейнере: /logs/zeek-live ← ${ZEEK_SPOOL_LOGGER}
 
 [sources.zeek_notice]
 type = "file"
-include = ["/logs/zeek-root/${ZEEK_LOG_SUBDIR:-current}/notice.log"]
+include = ["/logs/zeek-live/notice.log"]
 read_from = "end"
 ignore_older_secs = 86400
 glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_intel]
 type = "file"
-include = ["/logs/zeek-root/${ZEEK_LOG_SUBDIR:-current}/intel.log"]
+include = ["/logs/zeek-live/intel.log"]
 read_from = "end"
 ignore_older_secs = 86400
 glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_capture_loss]
 type = "file"
-include = ["/logs/zeek-root/${ZEEK_LOG_SUBDIR:-current}/capture_loss.log"]
+include = ["/logs/zeek-live/capture_loss.log"]
 read_from = "end"
 ignore_older_secs = 86400
 glob_minimum_cooldown_ms = 1000
 
 [sources.zeek_stats]
 type = "file"
-include = ["/logs/zeek-root/${ZEEK_LOG_SUBDIR:-current}/stats.log"]
+include = ["/logs/zeek-live/stats.log"]
 read_from = "end"
 ignore_older_secs = 86400
 glob_minimum_cooldown_ms = 1000
