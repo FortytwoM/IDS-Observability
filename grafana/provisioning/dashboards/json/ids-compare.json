@@ -1,4 +1,4 @@
-{
+﻿{
   "annotations": {
     "list": [
       {
@@ -23,7 +23,7 @@
       "id": 100,
       "options": {
         "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
-        "content": "## Suricata\nАлерты и потери захвата (слева)",
+        "content": "## Suricata",
         "mode": "markdown"
       },
       "title": "",
@@ -35,7 +35,7 @@
       "id": 110,
       "options": {
         "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
-        "content": "## Zeek\nNotices и потери захвата (справа)",
+        "content": "## Zeek",
         "mode": "markdown"
       },
       "title": "",
@@ -60,7 +60,7 @@
           "refId": "A"
         }
       ],
-      "title": "Suricata — alerts",
+      "title": "Алерты",
       "type": "stat"
     },
     {
@@ -90,11 +90,12 @@
           "refId": "A"
         }
       ],
-      "title": "Suricata — drops",
+      "title": "Потери",
       "type": "stat"
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
+      "description": "События notice.log Zeek (аналог алертов Suricata).",
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -111,12 +112,12 @@
           "refId": "A"
         }
       ],
-      "title": "Zeek — notices",
+      "title": "Алерты",
       "type": "stat"
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "description": "Последнее значение gaps из capture_loss (отчёт ~раз в 15 мин).",
+      "description": "Пропуски пакетов на SPAN (capture_loss.gaps), отчёт ~раз в 15 мин.",
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -140,7 +141,7 @@
           "refId": "A"
         }
       ],
-      "title": "Zeek — capture gaps",
+      "title": "Потери",
       "type": "stat"
     },
     {
@@ -157,11 +158,11 @@
       "targets": [
         {
           "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} [1m]))",
-          "legendFormat": "alerts/min",
+          "legendFormat": "алерты/мин",
           "refId": "A"
         }
       ],
-      "title": "Suricata — алерты / мин",
+      "title": "Алерты / мин",
       "type": "timeseries"
     },
     {
@@ -178,11 +179,11 @@
       "targets": [
         {
           "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} [1m]))",
-          "legendFormat": "notices/min",
+          "legendFormat": "алерты/мин",
           "refId": "A"
         }
       ],
-      "title": "Zeek — notices / мин",
+      "title": "Алерты / мин",
       "type": "timeseries"
     },
     {
@@ -200,11 +201,11 @@
       "targets": [
         {
           "expr": "max(rate_counter({job=\"ids\", vendor=\"suricata\", log_type=\"stats\"} | json | unwrap kernel_drops [5m]))",
-          "legendFormat": "kernel_drops/s",
+          "legendFormat": "потери/с",
           "refId": "A"
         }
       ],
-      "title": "Suricata — потери (drops/s)",
+      "title": "Потери",
       "type": "timeseries"
     },
     {
@@ -221,18 +222,18 @@
       "targets": [
         {
           "expr": "max(max_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"capture_loss\"} | json | unwrap gaps [15m]))",
-          "legendFormat": "gaps",
+          "legendFormat": "потери",
           "refId": "A"
         }
       ],
-      "title": "Zeek — потери (capture gaps)",
+      "title": "Потери",
       "type": "timeseries"
     },
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 20 },
       "id": 101,
-      "title": "Последние события",
+      "title": "Последние алерты",
       "type": "row"
     },
     {
@@ -255,7 +256,7 @@
           "refId": "A"
         }
       ],
-      "title": "Suricata — последние алерты",
+      "title": "Suricata",
       "type": "logs"
     },
     {
@@ -276,7 +277,7 @@
           "refId": "A"
         }
       ],
-      "title": "Zeek — последние notices",
+      "title": "Zeek",
       "type": "logs"
     },
     {
@@ -302,10 +303,10 @@
           "refId": "A"
         }
       ],
-      "title": "Suricata — top signatures",
+      "title": "Топ алертов",
       "transformations": [
         { "id": "labelsToFields", "options": { "mode": "columns" } },
-        { "id": "organize", "options": { "renameByName": { "Value": "count", "alert_title": "signature" } } }
+        { "id": "organize", "options": { "renameByName": { "Value": "count", "alert_title": "alert" } } }
       ],
       "type": "table"
     },
@@ -322,10 +323,10 @@
           "refId": "A"
         }
       ],
-      "title": "Zeek — top notice types",
+      "title": "Топ алертов",
       "transformations": [
         { "id": "labelsToFields", "options": { "mode": "columns" } },
-        { "id": "organize", "options": { "renameByName": { "Value": "count", "note": "notice" } } }
+        { "id": "organize", "options": { "renameByName": { "Value": "count", "note": "alert" } } }
       ],
       "type": "table"
     },
@@ -354,7 +355,7 @@
           "refId": "A"
         }
       ],
-      "title": "События по community_id (оба движка)",
+      "title": "По community_id",
       "type": "logs"
     }
   ],
@@ -380,5 +381,5 @@
   "timezone": "browser",
   "title": "IDS: Zeek vs Suricata",
   "uid": "ids-compare",
-  "version": 6
+  "version": 8
 }
