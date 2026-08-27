@@ -339,7 +339,7 @@
       {
         "current": { "selected": true, "text": ".*", "value": ".*" },
         "hide": 0,
-        "label": "IP (источник или цель)",
+        "label": "IP (src or dst)",
         "name": "host",
         "options": [{ "selected": true, "text": ".*", "value": ".*" }],
         "query": ".*",
