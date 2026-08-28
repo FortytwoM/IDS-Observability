@@ -55,7 +55,7 @@
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [$__range]))",
+          "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | (src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" or src =~ \"${host}\" or dst =~ \"${host}\") | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [$__range]))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -107,7 +107,7 @@
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [$__range]))",
+          "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | (src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" or src =~ \"${host}\" or dst =~ \"${host}\") | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [$__range]))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -157,7 +157,7 @@
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [1m]))",
+          "expr": "sum(count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | (src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" or src =~ \"${host}\" or dst =~ \"${host}\") | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [1m]))",
           "legendFormat": "алерты/мин",
           "refId": "A"
         }
@@ -178,7 +178,7 @@
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [1m]))",
+          "expr": "sum(count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | (src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" or src =~ \"${host}\" or dst =~ \"${host}\") | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [1m]))",
           "legendFormat": "алерты/мин",
           "refId": "A"
         }
@@ -252,7 +252,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" | line_format \"{{.severity}} {{.signature_id}} {{.alert_title}} {{.src_ip}}:{{.src_port}} -> {{.dest_ip}}:{{.dest_port}} cid={{.community_id}}\"",
+          "expr": "{job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | (src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" or src =~ \"${host}\" or dst =~ \"${host}\") | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" | line_format \"{{.severity}} {{.signature_id}} {{.alert_title}} {{.src_ip}}:{{.src_port}} -> {{.dest_ip}}:{{.dest_port}} cid={{.community_id}}\"",
           "refId": "A"
         }
       ],
@@ -273,7 +273,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" | line_format \"{{.note}} {{.alert_title}} {{.src_ip}}:{{.src_port}} -> {{.dest_ip}}:{{.dest_port}} cid={{.community_id}}\"",
+          "expr": "{job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | (src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" or src =~ \"${host}\" or dst =~ \"${host}\") | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" | line_format \"{{.note}} {{.alert_title}} {{.src_ip}}:{{.src_port}} -> {{.dest_ip}}:{{.dest_port}} cid={{.community_id}}\"",
           "refId": "A"
         }
       ],
@@ -298,7 +298,7 @@
       },
       "targets": [
         {
-          "expr": "topk(10, sum by (alert_title) (count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [$__range])))",
+          "expr": "topk(10, sum by (alert_title) (count_over_time({job=\"ids\", vendor=\"suricata\", log_type=\"alert\"} | json | signature_id !~ \"2210029|2210045\" | (src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" or src =~ \"${host}\" or dst =~ \"${host}\") | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [$__range])))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -318,7 +318,7 @@
       "options": { "cellHeight": "sm", "showHeader": true },
       "targets": [
         {
-          "expr": "topk(10, sum by (note) (count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [$__range])))",
+          "expr": "topk(10, sum by (note) (count_over_time({job=\"ids\", vendor=\"zeek\", log_type=\"notice\"} | json | (src_ip =~ \"${host}\" or dest_ip =~ \"${host}\" or src =~ \"${host}\" or dst =~ \"${host}\") | signature_id =~ \"${sid}\" | alert_title =~ \"${alert}\" |~ \"${port}\" [$__range])))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -383,5 +383,5 @@
   "timezone": "browser",
   "title": "IDS: Suricata и Zeek",
   "uid": "ids-compare",
-  "version": 28
+  "version": 29
 }
